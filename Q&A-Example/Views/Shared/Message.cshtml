@@ -1,0 +1,40 @@
+﻿@using PersianDate.Standard
+@model Message
+
+@{
+    int level = ViewBag.Level ?? 0;
+    int indent = level * 20;
+
+    var persianDate = Model.CreatedAt.ToFa("f");
+}
+
+<div class="ml-[@(indent)]">
+    <div class="bg-white border border-gray-200 p-4 rounded-xl shadow-sm mt-2">
+        @if (Model.ParentMessage != null)
+        {
+            <div class="bg-gray-100 p-2 rounded mb-2 text-sm text-gray-600 border-r-4 border-blue-500">
+                📨 پاسخ به: @Model.ParentMessage.Content
+            </div>
+        }
+        <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
+            <span class="text-gray-500">@persianDate</span>
+        </div>
+        <p class="text-gray-800 text-right" id="message-text-@Model.Id">@Model.Content</p>
+
+        <div class="mt-2 text-left">
+            <button onclick="replyTo(@Model.Id)" class="text-sm text-blue-600 hover:underline">↩ پاسخ</button>
+        </div>
+    </div>
+
+    @if (Model.Replies != null && Model.Replies.Any())
+    {
+        foreach (var reply in Model.Replies)
+        {
+            <div class="text-sm text-red-600 font-semibold mb-1">
+                @reply.User.Username
+            </div>
+            ViewBag.Level = level + 1;
+            @Html.Partial("Message", reply)
+        }
+    }
+</div>

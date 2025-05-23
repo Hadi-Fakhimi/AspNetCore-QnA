@@ -1,0 +1,69 @@
+﻿@model List<Message>
+@{
+    ViewData["Title"] = "پرسش و پاسخ";
+
+
+    var userId = Context.Session.GetInt32("UserId");
+    bool isLoggedIn = userId.HasValue;
+}
+
+
+<div class="container mx-auto max-w-3xl py-8 px-4" dir="rtl">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">💬 سیستم پرسش و پاسخ</h1>
+
+    <div class="space-y-4">
+        @foreach (var message in Model)
+        {
+            <div class="text-sm text-red-600 font-semibold mb-1">
+                @message.User.Username
+            </div>
+            @Html.Partial("Message", message)
+        }
+    </div>
+
+    <div class="mt-10 bg-white p-6 rounded-xl shadow-md border relative">
+
+      
+        <div id="replyPreview" class="hidden bg-gray-100 border-r-4 border-blue-500 p-3 rounded mb-4 flex justify-between items-center text-sm text-gray-700">
+            <div class="truncate max-w-[85%]">
+                📨 پاسخ به: <span id="replyContent" class="font-medium text-gray-900"></span>
+            </div>
+            <button type="button" onclick="cancelReply()" class="text-red-500 text-lg font-bold px-2">×</button>
+        </div>
+        @if (isLoggedIn)
+        {
+            <form method="post" asp-action="Add" class="space-y-4">
+                <input type="hidden" name="ParentMessageId" id="parentMessageId" />
+                <textarea name="Content" placeholder="پیام خود را بنویسید..." class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">ارسال پیام</button>
+            </form>
+        }
+        else
+        {
+            <div class="text-sm text-gray-500 italic">
+                برای ارسال پیام لطفاً وارد شوید.
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function replyTo(id) {
+
+            const messageText = document.getElementById("message-text-" + id)?.innerText || "پیام مورد نظر";
+            document.getElementById("parentMessageId").value = id;
+            document.getElementById("replyContent").innerText = messageText;
+            document.getElementById("replyPreview").classList.remove("hidden");
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function cancelReply() {
+            document.getElementById("parentMessageId").value = '';
+            document.getElementById("replyPreview").classList.add("hidden");
+            document.getElementById("replyContent").innerText = '';
+        }
+    </script>
+}
+
