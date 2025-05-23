@@ -18,8 +18,10 @@ A simple and effective Question & Answer web application built with **ASP.NET Co
 ```bash
 📦 QnAApp
 ├── 📁 Controllers       # Web API Controllers
-├── 📁 Models            # Domain models and DTOs
-├── 📁 Data              # EF Core DbContext and Migrations
+├── 📁 Models            # Domain models
+├── 📁 Migrations              # Migrations
+├── 📁 Context              # EF Core DbContext
+├── 📁 IoC              # Dependency Injection Service
 ├── 📁 Services          # Business logic
-├── 📁 Repositories      # Data access layer
+├── 📁 View      # User Interface
 └── 📁 wwwroot           # Static files (if any)
